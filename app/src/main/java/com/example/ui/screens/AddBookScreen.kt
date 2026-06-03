@@ -132,7 +132,9 @@ fun AddBookScreen(
             // Footer bottom button
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .imePadding(),
                 color = MaterialTheme.colorScheme.background
             ) {
                 Button(

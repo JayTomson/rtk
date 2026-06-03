@@ -160,13 +160,12 @@ fun ShareOptionTile(
 fun getAdaptiveStatusBarPadding(): Dp {
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     return remember(statusBarHeight) {
-        if (statusBarHeight > 30.dp) {
-            // For devices with physically thick status bars (Pixel 6, notches, cutouts),
-            // we reduce the excessive empty padding so that the content is pulled up beautifully
-            // closer to the system status icons without any overlap risk.
-            (statusBarHeight - 14.dp).coerceAtLeast(24.dp)
+        // Use the exact system status bar height, fallback to 16.dp if system height is 0.
+        // This ensures the content is safely placed below system icons and cutouts on all screens.
+        if (statusBarHeight == 0.dp) {
+            16.dp
         } else {
-            statusBarHeight.coerceAtLeast(8.dp)
+            statusBarHeight
         }
     }
 }
