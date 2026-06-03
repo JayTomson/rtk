@@ -34,8 +34,11 @@ fun ShareAnalyticsScreen(
     onNavigateBack: () -> Unit
 ) {
     val books by viewModel.books.collectAsState()
-    val showWebInStats by viewModel.showWebInStats.collectAsState()
+    val analyticsShowMode by viewModel.analyticsShowMode.collectAsState()
     val shortenNumbers by viewModel.shortenNumbers.collectAsState()
+
+    val showSingles = analyticsShowMode == 0 || analyticsShowMode == 1
+    val showWeb = analyticsShowMode == 0 || analyticsShowMode == 2
 
     val completedSeriesCount = books.count { it.status == 3 && it.isSeries }
     val completedSinglesCount = books.count { it.status == 3 && it.isSingle }
@@ -146,7 +149,7 @@ fun ShareAnalyticsScreen(
                         color = Color(0xFF34D399)
                     )
 
-                    if (completedSinglesCount > 0) {
+                    if (showSingles && completedSinglesCount > 0) {
                         ShareMetricRow(
                             label = "Завершено синглов",
                             value = completedSinglesCount.toString(),
@@ -164,7 +167,7 @@ fun ShareAnalyticsScreen(
                         )
                     }
 
-                    if (showWebInStats) {
+                    if (showWeb) {
                         ShareMetricRow(
                             label = "Завершено веб-новелл",
                             value = completedWebCount.toString(),
@@ -242,7 +245,7 @@ fun ShareListScreen(
     onNavigateBack: () -> Unit
 ) {
     val books by viewModel.books.collectAsState()
-    val showWebInStats by viewModel.showWebInStats.collectAsState()
+    val analyticsShowMode by viewModel.analyticsShowMode.collectAsState()
     val shortenNumbers by viewModel.shortenNumbers.collectAsState()
 
     val completedSeriesCount = books.count { it.status == 3 && it.isSeries }
@@ -341,23 +344,23 @@ fun ShareListScreen(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                if (showWebInStats) {
-                    val labelText = remember(completedSeriesCount, completedSinglesCount, completedHybridsCount, completedWebCount) {
-                        buildString {
-                            append("Серий: $completedSeriesCount")
-                            if (completedSinglesCount > 0) append("  |  Синглов: $completedSinglesCount")
-                            if (completedHybridsCount > 0) append("  |  Гибридов: $completedHybridsCount")
-                            append("  |  Веб: $completedWebCount")
-                        }
+                val labelText = remember(completedSeriesCount, completedSinglesCount, completedHybridsCount, completedWebCount, analyticsShowMode) {
+                    val showSingles = analyticsShowMode == 0 || analyticsShowMode == 1
+                    val showWeb = analyticsShowMode == 0 || analyticsShowMode == 2
+                    buildString {
+                        append("Серий: $completedSeriesCount")
+                        if (showSingles && completedSinglesCount > 0) append("  |  Синглов: $completedSinglesCount")
+                        if (completedHybridsCount > 0) append("  |  Гибридов: $completedHybridsCount")
+                        if (showWeb) append("  |  Веб: $completedWebCount")
                     }
-                    Text(
-                        labelText,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF34D399)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
+                Text(
+                    labelText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF34D399)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Listing Books
                 Column(

@@ -46,7 +46,7 @@ fun SettingsScreen(
     val enableRating by viewModel.enableRating.collectAsState()
     val ratingScale by viewModel.ratingScale.collectAsState()
     val badgeLayoutMode by viewModel.badgeLayoutMode.collectAsState()
-    val showWebInStats by viewModel.showWebInStats.collectAsState()
+    val analyticsShowMode by viewModel.analyticsShowMode.collectAsState()
 
     val pendingImportBooks by viewModel.pendingImportBooks.collectAsState()
 
@@ -213,11 +213,17 @@ fun SettingsScreen(
             // APPEARANCE GROUPS
             CategoryHeader("Отображение")
             CardGroup {
-                SwitchRow(
-                    title = "Показ Веб в аналитике",
-                    subtitle = if (showWebInStats) "Отображает прочитанные веб-новеллы в статистике и карточках" else "Скрывает метрики веб-новелл в отчётах",
-                    checked = showWebInStats,
-                    onCheckedChange = { viewModel.setShowWebInStats(it) }
+                DropdownRow(
+                    title = "Показ в аналитике",
+                    subtitle = "Выбрать, какие типы отображать в отчётах",
+                    options = listOf(
+                        "Синглы и Веб" to 0,
+                        "Только синглы" to 1,
+                        "Только Веб" to 2,
+                        "Скрыто" to 3
+                    ),
+                    selectedValue = analyticsShowMode,
+                    onValueChange = { viewModel.setAnalyticsShowMode(it) }
                 )
                 HorizontalDivider(color = Color.Gray.copy(alpha = 0.12f))
                 SwitchRow(

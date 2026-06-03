@@ -39,6 +39,7 @@ class ReadTrackerViewModel(application: Application) : AndroidViewModel(applicat
     val enableRating: StateFlow<Boolean> = prefsManager.enableRating
     val ratingScale: StateFlow<Int> = prefsManager.ratingScale
     val badgeLayoutMode: StateFlow<Int> = prefsManager.badgeLayoutMode
+    val analyticsShowMode: StateFlow<Int> = prefsManager.analyticsShowMode
     val showWebInStats: StateFlow<Boolean> = prefsManager.showWebInStats
     val savedTabIndex: StateFlow<Int> = prefsManager.savedTabIndex
 
@@ -76,6 +77,7 @@ class ReadTrackerViewModel(application: Application) : AndroidViewModel(applicat
     fun setEnableRating(v: Boolean) = prefsManager.setEnableRating(v)
     fun setRatingScale(s: Int) = prefsManager.setRatingScale(s)
     fun setBadgeLayoutMode(v: Int) = prefsManager.setBadgeLayoutMode(v)
+    fun setAnalyticsShowMode(v: Int) = prefsManager.setAnalyticsShowMode(v)
     fun setShowWebInStats(v: Boolean) = prefsManager.setShowWebInStats(v)
 
     // Book Actions

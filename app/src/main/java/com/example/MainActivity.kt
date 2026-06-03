@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     snackbarHost = {
                         SnackbarHost(hostState = snackbarHostState) { data ->
                             val isSuccess = data.visuals.actionLabel == "success"
@@ -104,9 +105,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = "library",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = innerPadding.calculateBottomPadding())
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         composable("library") {
                             LibraryScreen(

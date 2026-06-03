@@ -48,6 +48,9 @@ class PreferencesManager(context: Context) {
     private val _badgeLayoutMode = MutableStateFlow(prefs.getInt("badgeLayoutMode", 0)) // 0 = Column, 1 = Row
     val badgeLayoutMode: StateFlow<Int> = _badgeLayoutMode
 
+    private val _analyticsShowMode = MutableStateFlow(prefs.getInt("analyticsShowMode", 0)) // 0 = Both, 1 = Only Singles, 2 = Only Web, 3 = None
+    val analyticsShowMode: StateFlow<Int> = _analyticsShowMode
+
     private val _showWebInStats = MutableStateFlow(prefs.getBoolean("showWebInStats", true))
     val showWebInStats: StateFlow<Boolean> = _showWebInStats
 
@@ -120,6 +123,11 @@ class PreferencesManager(context: Context) {
     fun setBadgeLayoutMode(value: Int) {
         prefs.edit().putInt("badgeLayoutMode", value).apply()
         _badgeLayoutMode.value = value
+    }
+
+    fun setAnalyticsShowMode(value: Int) {
+        prefs.edit().putInt("analyticsShowMode", value).apply()
+        _analyticsShowMode.value = value
     }
 
     fun setShowWebInStats(value: Boolean) {

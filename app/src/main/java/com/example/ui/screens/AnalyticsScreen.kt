@@ -36,7 +36,7 @@ fun AnalyticsScreen(
     val books by viewModel.books.collectAsState()
     val shortenNumbers by viewModel.shortenNumbers.collectAsState()
     val stackedStats by viewModel.stackedStats.collectAsState()
-    val showWebInStats by viewModel.showWebInStats.collectAsState()
+    val analyticsShowMode by viewModel.analyticsShowMode.collectAsState()
 
     // Calculating Metrics with optimized remember block
     val completedSeriesCount = remember(books) { books.count { it.status == 3 && it.isSeries } }
@@ -76,7 +76,9 @@ fun AnalyticsScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             // METRICS CARD SECTION
-            val statsList = remember(completedSeriesCount, completedSinglesCount, completedHybridsCount, completedWebCount, showWebInStats, hasBooksWithVolumes, totalVolumesRead) {
+            val statsList = remember(completedSeriesCount, completedSinglesCount, completedHybridsCount, completedWebCount, analyticsShowMode, hasBooksWithVolumes, totalVolumesRead) {
+                val showSingles = analyticsShowMode == 0 || analyticsShowMode == 1
+                val showWeb = analyticsShowMode == 0 || analyticsShowMode == 2
                 mutableListOf<@Composable () -> Unit>().apply {
                     add {
                         StatCard(
@@ -87,7 +89,7 @@ fun AnalyticsScreen(
                         )
                     }
 
-                    if (completedSinglesCount > 0) {
+                    if (showSingles && completedSinglesCount > 0) {
                         add {
                             StatCard(
                                 count = completedSinglesCount.toString(),
@@ -109,7 +111,7 @@ fun AnalyticsScreen(
                         }
                     }
 
-                    if (showWebInStats) {
+                    if (showWeb) {
                         add {
                             StatCard(
                                 count = completedWebCount.toString(),
