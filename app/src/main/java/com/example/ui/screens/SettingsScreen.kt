@@ -48,6 +48,7 @@ fun SettingsScreen(
     val badgeLayoutMode by viewModel.badgeLayoutMode.collectAsState()
     val analyticsShowMode by viewModel.analyticsShowMode.collectAsState()
     val disableAnimations by viewModel.disableAnimations.collectAsState()
+    val cardSpacing by viewModel.cardSpacing.collectAsState()
 
     val pendingImportBooks by viewModel.pendingImportBooks.collectAsState()
 
@@ -273,6 +274,14 @@ fun SettingsScreen(
                     checked = disableAnimations,
                     onCheckedChange = { viewModel.setDisableAnimations(it) }
                 )
+                HorizontalDivider(color = Color.Gray.copy(alpha = 0.12f))
+                SliderRow(
+                    title = "Расстояние в карточках",
+                    subtitle = "Настройка высоты и интервала строк внутри карточек",
+                    value = cardSpacing,
+                    valueRange = 0.0f..10.0f,
+                    onValueChange = { viewModel.setCardSpacing(it) }
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -468,6 +477,49 @@ fun ActionTile(
             contentDescription = null,
             tint = Color.Gray,
             modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
+fun SliderRow(
+    title: String,
+    subtitle: String,
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    onValueChange: (Float) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1.0f)) {
+                Text(title, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                Text(subtitle, fontSize = 11.sp, color = Color.Gray)
+            }
+            Text(
+                text = "${value.toInt()}",
+                color = AccentOrange,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = valueRange,
+            colors = SliderDefaults.colors(
+                thumbColor = AccentOrange,
+                activeTrackColor = AccentOrange,
+                inactiveTrackColor = Color.Gray.copy(alpha = 0.24f)
+            )
         )
     }
 }

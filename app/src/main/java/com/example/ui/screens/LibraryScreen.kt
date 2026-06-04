@@ -345,7 +345,7 @@ fun BookRowItem(
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-                .padding(horizontal = 10.dp, vertical = 4.dp),
+                .padding(horizontal = 10.dp, vertical = (5f + (cardSpacing / 2f)).dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 1. Cover
@@ -387,8 +387,7 @@ fun BookRowItem(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 14.sp
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 // Line 2: Status Indicator only
@@ -612,14 +611,14 @@ fun BookRowItem(
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-                .padding(horizontal = 12.dp, vertical = 4.dp),
+                .padding(horizontal = 12.dp, vertical = (5f + (cardSpacing / 2f)).dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Status bar strip on extreme left
             Box(
                 modifier = Modifier
                     .width(3.dp)
-                    .height(24.dp)
+                    .height((24f + cardSpacing).dp)
                     .clip(RoundedCornerShape(2.dp))
                     .background(statusColor)
             )
@@ -637,8 +636,7 @@ fun BookRowItem(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 14.sp
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 // Line 2: Progress indicators
