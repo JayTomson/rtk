@@ -96,7 +96,7 @@ os.environ["ANDROID_SDK_ROOT"] = colab_sdk_path
 # ==============================================================================
 # 3. ПЕРЕХОД В ПРОЕКТ И НАСТРОЙКА GRADLE
 # ==============================================================================
-%cd /content/EpubEdit
+%cd /content/rtk
 
 if not os.path.exists("build.gradle") and not os.path.exists("build.gradle.kts"):
     print("\n⚠️ Внимание: В текущей папке /content/rtk не найден файл build.gradle.")
