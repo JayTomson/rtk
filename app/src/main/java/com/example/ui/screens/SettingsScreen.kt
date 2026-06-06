@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontFamily
 @Composable
 fun SettingsScreen(
     viewModel: ReadTrackerViewModel,
+    onNavigateToColorSettings: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -51,18 +52,6 @@ fun SettingsScreen(
     val disableAnimations by viewModel.disableAnimations.collectAsState()
     val cardSpacing by viewModel.cardSpacing.collectAsState()
     val titleFontSize by viewModel.titleFontSize.collectAsState()
-
-    // Dynamic custom colors
-    val colorAccentHex by viewModel.colorAccent.collectAsState()
-    val colorFormatHybridHex by viewModel.colorFormatHybrid.collectAsState()
-    val colorFormatSeriesHex by viewModel.colorFormatSeries.collectAsState()
-    val colorFormatWebHex by viewModel.colorFormatWeb.collectAsState()
-    val colorFormatSingleHex by viewModel.colorFormatSingle.collectAsState()
-    val colorStatusPlannedHex by viewModel.colorStatusPlanned.collectAsState()
-    val colorStatusReadingHex by viewModel.colorStatusReading.collectAsState()
-    val colorStatusPausedHex by viewModel.colorStatusPaused.collectAsState()
-    val colorStatusCompletedHex by viewModel.colorStatusCompleted.collectAsState()
-    val colorStatusDroppedHex by viewModel.colorStatusDropped.collectAsState()
 
     val pendingImportBooks by viewModel.pendingImportBooks.collectAsState()
 
@@ -309,104 +298,14 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // CUSTOM COLORS GROUP
-            CategoryHeader("Кастомизация цветов")
+            CategoryHeader("Настройки цвета")
             CardGroup {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { viewModel.resetColorsToDefault() }
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Пользовательские цвета",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Сбросить всё",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                
-                HorizontalDivider(color = Color.Gray.copy(alpha = 0.12f))
-
-                ColorConfigRow(
-                    label = "Цвет самого интерфейса",
-                    hexValue = colorAccentHex,
-                    onValueChange = { viewModel.setColorAccent(it) }
-                )
-
-                HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f))
-
-                Text(
-                    text = "Типы тайтлов",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-                )
-
-                ColorConfigRow(
-                    label = "LN+WN Гибрид",
-                    hexValue = colorFormatHybridHex,
-                    onValueChange = { viewModel.setColorFormatHybrid(it) }
-                )
-                ColorConfigRow(
-                    label = "Серия томов",
-                    hexValue = colorFormatSeriesHex,
-                    onValueChange = { viewModel.setColorFormatSeries(it) }
-                )
-                ColorConfigRow(
-                    label = "Веб-новелла",
-                    hexValue = colorFormatWebHex,
-                    onValueChange = { viewModel.setColorFormatWeb(it) }
-                )
-                ColorConfigRow(
-                    label = "Сингл (Одиночное)",
-                    hexValue = colorFormatSingleHex,
-                    onValueChange = { viewModel.setColorFormatSingle(it) }
-                )
-
-                HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f))
-
-                Text(
-                    text = "Статусы чтения",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-                )
-
-                ColorConfigRow(
-                    label = "В планах",
-                    hexValue = colorStatusPlannedHex,
-                    onValueChange = { viewModel.setColorStatusPlanned(it) }
-                )
-                ColorConfigRow(
-                    label = "Читаю",
-                    hexValue = colorStatusReadingHex,
-                    onValueChange = { viewModel.setColorStatusReading(it) }
-                )
-                ColorConfigRow(
-                    label = "На паузе",
-                    hexValue = colorStatusPausedHex,
-                    onValueChange = { viewModel.setColorStatusPaused(it) }
-                )
-                ColorConfigRow(
-                    label = "Завершено",
-                    hexValue = colorStatusCompletedHex,
-                    onValueChange = { viewModel.setColorStatusCompleted(it) }
-                )
-                ColorConfigRow(
-                    label = "Брошено",
-                    hexValue = colorStatusDroppedHex,
-                    onValueChange = { viewModel.setColorStatusDropped(it) }
+                ActionTile(
+                    title = "Кастомизация цветов",
+                    subtitle = "Настроить цвета интерфейса, типов и статусов",
+                    icon = Icons.Rounded.Palette,
+                    color = MaterialTheme.colorScheme.primary,
+                    onClick = onNavigateToColorSettings
                 )
             }
 
@@ -467,18 +366,6 @@ fun SettingsScreen(
             shape = RoundedCornerShape(20.dp),
             containerColor = MaterialTheme.colorScheme.surface
         )
-    }
-}
-
-@Composable
-fun CardGroup(content: @Composable () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        content()
     }
 }
 
@@ -651,120 +538,3 @@ fun SliderRow(
     }
 }
 
-@Composable
-fun ColorConfigRow(
-    label: String,
-    hexValue: String,
-    onValueChange: (String) -> Unit
-) {
-    var textState by remember(hexValue) { mutableStateOf(hexValue) }
-    val displayColor = remember(hexValue) { parseHexColor(hexValue, AccentOrange) }
-    var showPickerDialog by remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Color Circle Preview
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(displayColor)
-                .clickable { showPickerDialog = true }
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.weight(1f)
-        )
-
-        // Hex input field
-        OutlinedTextField(
-            value = textState,
-            onValueChange = { newValue ->
-                val cleaned = newValue.trim()
-                textState = cleaned
-                if (cleaned.length in 6..9) {
-                    onValueChange(cleaned)
-                }
-            },
-            singleLine = true,
-            modifier = Modifier.width(100.dp),
-            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp, fontFamily = FontFamily.Monospace),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray.copy(alpha = 0.4f),
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent
-            )
-        )
-    }
-
-    if (showPickerDialog) {
-        PresetColorDialog(
-            onDismiss = { showPickerDialog = false },
-            onSelectColor = { pickedHex ->
-                textState = pickedHex
-                onValueChange(pickedHex)
-            }
-        )
-    }
-}
-
-@Composable
-fun PresetColorDialog(
-    onDismiss: () -> Unit,
-    onSelectColor: (String) -> Unit
-) {
-    val presetRows = listOf(
-        listOf("#FF9F0A", "#34D399", "#60A5FA", "#A78BFA", "#FBBF24", "#F87171"),
-        listOf("#F472B6", "#22D3EE", "#2DD4BF", "#FDA4AF", "#94A3B8", "#C084FC")
-    )
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Выберите цвет", fontWeight = FontWeight.Bold, fontSize = 16.sp) },
-        text = {
-            Column {
-                Text("Выберите из готовой палитры:", fontSize = 13.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 12.dp))
-                presetRows.forEach { row ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        row.forEach { hex ->
-                            val c = remember(hex) { parseHexColor(hex, Color.Gray) }
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(RoundedCornerShape(18.dp))
-                                    .background(c)
-                                    .clickable {
-                                        onSelectColor(hex)
-                                        onDismiss()
-                                    }
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = onDismiss,
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text("Закрыть", fontWeight = FontWeight.Bold)
-            }
-        },
-        shape = RoundedCornerShape(20.dp),
-        containerColor = MaterialTheme.colorScheme.surface
-    )
-}

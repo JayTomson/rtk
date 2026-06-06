@@ -21,21 +21,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
-// Hex Color parsing helper
+private val colorCache = java.util.concurrent.ConcurrentHashMap<String, Color>()
+
+// Hex Color parsing helper with highly optimized O(1) cache lookup
 fun parseHexColor(hex: String, default: Color): Color {
-    return try {
-        val cleaned = hex.trim().replace("#", "").uppercase()
-        if (cleaned.length == 6) {
-            val rgb = cleaned.toLong(16)
-            Color(0xFF000000 or rgb)
-        } else if (cleaned.length == 8) {
-            val argb = cleaned.toLong(16)
-            Color(argb)
-        } else {
+    val key = hex.trim().replace("#", "").uppercase()
+    if (key.length != 6 && key.length != 8) return default
+    return colorCache.getOrPut(key) {
+        try {
+            if (key.length == 6) {
+                val rgb = key.toLong(16)
+                Color(0xFF000000 or rgb)
+            } else {
+                val argb = key.toLong(16)
+                Color(argb)
+            }
+        } catch (_: Exception) {
             default
         }
-    } catch (_: Exception) {
-        default
     }
 }
 
@@ -222,6 +225,18 @@ fun getAdaptiveStatusBarPadding(): Dp {
         } else {
             statusBarHeight
         }
+    }
+}
+
+@Composable
+fun CardGroup(content: @Composable () -> Unit) {
+    androidx.compose.foundation.layout.Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        content()
     }
 }
 

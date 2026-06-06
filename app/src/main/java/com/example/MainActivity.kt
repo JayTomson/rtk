@@ -136,6 +136,14 @@ class MainActivity : ComponentActivity() {
                         composable("settings") {
                             SettingsScreen(
                                 viewModel = viewModel,
+                                onNavigateToColorSettings = { navController.navigate("color_settings") },
+                                onNavigateBack = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable("color_settings") {
+                            ColorSettingsScreen(
+                                viewModel = viewModel,
                                 onNavigateBack = { navController.popBackStack() }
                             )
                         }
