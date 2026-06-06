@@ -74,51 +74,42 @@ fun SettingsScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             
             // THEME GROUP
-            item {
-                ThemeSettingsGroup(viewModel)
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+            ThemeSettingsGroup(viewModel)
+            Spacer(modifier = Modifier.height(20.dp))
 
             // ADVANCED FUNCTIONS GROUP
-            item {
-                AdvancedSettingsGroup(viewModel)
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+            AdvancedSettingsGroup(viewModel)
+            Spacer(modifier = Modifier.height(20.dp))
 
             // APPEARANCE GROUPS
-            item {
-                AppearanceSettingsGroup(viewModel)
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+            AppearanceSettingsGroup(viewModel)
+            Spacer(modifier = Modifier.height(20.dp))
 
             // COLOR SETTINGS
-            item {
-                CategoryHeader("Настройки цвета")
-                CardGroup {
-                    ActionTile(
-                        title = "Кастомизация цветов",
-                        subtitle = "Настроить цвета интерфейса, типов и статусов",
-                        icon = Icons.Rounded.Palette,
-                        color = MaterialTheme.colorScheme.primary,
-                        onClick = onNavigateToColorSettings
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
+            CategoryHeader("Настройки цвета")
+            CardGroup {
+                ActionTile(
+                    title = "Кастомизация цветов",
+                    subtitle = "Настроить цвета интерфейса, типов и статусов",
+                    icon = Icons.Rounded.Palette,
+                    color = MaterialTheme.colorScheme.primary,
+                    onClick = onNavigateToColorSettings
+                )
             }
+            Spacer(modifier = Modifier.height(20.dp))
 
             // FILE MANAGEMENT DATA ACTIONS GROUP
-            item {
-                DataSettingsGroup(viewModel, context, importFileLauncher)
-                Spacer(modifier = Modifier.height(40.dp))
-            }
+            DataSettingsGroup(viewModel, context, importFileLauncher)
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 
