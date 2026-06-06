@@ -45,6 +45,7 @@ class ReadTrackerViewModel(application: Application) : AndroidViewModel(applicat
     val disableAnimations: StateFlow<Boolean> = prefsManager.disableAnimations
     val cardSpacing: StateFlow<Float> = prefsManager.cardSpacing
     val titleFontSize: StateFlow<Float> = prefsManager.titleFontSize
+    val filterSpacing: StateFlow<Float> = prefsManager.filterSpacing
 
     // Custom colors
     val colorAccent: StateFlow<String> = prefsManager.colorAccent
@@ -97,6 +98,7 @@ class ReadTrackerViewModel(application: Application) : AndroidViewModel(applicat
     fun setDisableAnimations(v: Boolean) = prefsManager.setDisableAnimations(v)
     fun setCardSpacing(v: Float) = prefsManager.setCardSpacing(v)
     fun setTitleFontSize(v: Float) = prefsManager.setTitleFontSize(v)
+    fun setFilterSpacing(v: Float) = prefsManager.setFilterSpacing(v)
 
     fun setColorAccent(v: String) = prefsManager.setColorAccent(v)
     fun setColorFormatHybrid(v: String) = prefsManager.setColorFormatHybrid(v)

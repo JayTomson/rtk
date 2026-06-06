@@ -53,6 +53,7 @@ fun LibraryScreen(
     val badgeLayoutMode by viewModel.badgeLayoutMode.collectAsState()
     val enableAdaptationStart by viewModel.enableAdaptationStart.collectAsState()
     val showWebChapters by viewModel.showWebChapters.collectAsState()
+    val filterSpacing by viewModel.filterSpacing.collectAsState()
     val cardSpacing by viewModel.cardSpacing.collectAsState()
     val titleFontSize by viewModel.titleFontSize.collectAsState()
     
@@ -169,6 +170,8 @@ fun LibraryScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(filterSpacing.dp))
 
             // Custom horizontal filters with close spacing and underline indicator
             LazyRow(

@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -28,17 +26,6 @@ fun ColorSettingsScreen(
     viewModel: ReadTrackerViewModel,
     onNavigateBack: () -> Unit
 ) {
-    val colorAccentHex by viewModel.colorAccent.collectAsState()
-    val colorFormatHybridHex by viewModel.colorFormatHybrid.collectAsState()
-    val colorFormatSeriesHex by viewModel.colorFormatSeries.collectAsState()
-    val colorFormatWebHex by viewModel.colorFormatWeb.collectAsState()
-    val colorFormatSingleHex by viewModel.colorFormatSingle.collectAsState()
-    val colorStatusPlannedHex by viewModel.colorStatusPlanned.collectAsState()
-    val colorStatusReadingHex by viewModel.colorStatusReading.collectAsState()
-    val colorStatusPausedHex by viewModel.colorStatusPaused.collectAsState()
-    val colorStatusCompletedHex by viewModel.colorStatusCompleted.collectAsState()
-    val colorStatusDroppedHex by viewModel.colorStatusDropped.collectAsState()
-
     var showResetConfirmation by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -86,88 +73,21 @@ fun ColorSettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // GENERAL INTERFACE COLOR
             item {
-                CategoryHeader("Основной цвет приложения")
-                CardGroup {
-                    ColorConfigRow(
-                        label = "Цвет акцента и кнопок",
-                        hexValue = colorAccentHex,
-                        onValueChange = { viewModel.setColorAccent(it) }
-                    )
-                }
+                InterfaceColorGroup(viewModel)
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // REVELANT TYPES COLORS
             item {
-                CategoryHeader("Типы изданий")
-                CardGroup {
-                    ColorConfigRow(
-                        label = "LN+WN Гибрид",
-                        hexValue = colorFormatHybridHex,
-                        onValueChange = { viewModel.setColorFormatHybrid(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Серия томов",
-                        hexValue = colorFormatSeriesHex,
-                        onValueChange = { viewModel.setColorFormatSeries(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Веб-новелла (Web)",
-                        hexValue = colorFormatWebHex,
-                        onValueChange = { viewModel.setColorFormatWeb(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Сингл (Одиночная книга)",
-                        hexValue = colorFormatSingleHex,
-                        onValueChange = { viewModel.setColorFormatSingle(it) }
-                    )
-                }
+                FormatTypesColorGroup(viewModel)
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // STATUSES OF READING
             item {
-                CategoryHeader("Статусы чтения")
-                CardGroup {
-                    ColorConfigRow(
-                        label = "В планах",
-                        hexValue = colorStatusPlannedHex,
-                        onValueChange = { viewModel.setColorStatusPlanned(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Читаю",
-                        hexValue = colorStatusReadingHex,
-                        onValueChange = { viewModel.setColorStatusReading(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "На паузе",
-                        hexValue = colorStatusPausedHex,
-                        onValueChange = { viewModel.setColorStatusPaused(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Завершено",
-                        hexValue = colorStatusCompletedHex,
-                        onValueChange = { viewModel.setColorStatusCompleted(it) }
-                    )
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
-                    ColorConfigRow(
-                        label = "Брошено",
-                        hexValue = colorStatusDroppedHex,
-                        onValueChange = { viewModel.setColorStatusDropped(it) }
-                    )
-                }
+                StatusesColorGroup(viewModel)
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Action: Reset Colors button at the bottom
             item {
                 Button(
                     onClick = { showResetConfirmation = true },
@@ -221,6 +141,97 @@ fun ColorSettingsScreen(
             },
             shape = RoundedCornerShape(20.dp),
             containerColor = MaterialTheme.colorScheme.surface
+        )
+    }
+}
+
+@Composable
+fun InterfaceColorGroup(viewModel: ReadTrackerViewModel) {
+    val colorAccentHex by viewModel.colorAccent.collectAsState()
+
+    CategoryHeader("Основной цвет приложения")
+    CardGroup {
+        ColorConfigRow(
+            label = "Цвет акцента и кнопок",
+            hexValue = colorAccentHex,
+            onValueChange = { viewModel.setColorAccent(it) }
+        )
+    }
+}
+
+@Composable
+fun FormatTypesColorGroup(viewModel: ReadTrackerViewModel) {
+    val colorFormatHybridHex by viewModel.colorFormatHybrid.collectAsState()
+    val colorFormatSeriesHex by viewModel.colorFormatSeries.collectAsState()
+    val colorFormatWebHex by viewModel.colorFormatWeb.collectAsState()
+    val colorFormatSingleHex by viewModel.colorFormatSingle.collectAsState()
+
+    CategoryHeader("Типы изданий")
+    CardGroup {
+        ColorConfigRow(
+            label = "LN+WN Гибрид",
+            hexValue = colorFormatHybridHex,
+            onValueChange = { viewModel.setColorFormatHybrid(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Серия томов",
+            hexValue = colorFormatSeriesHex,
+            onValueChange = { viewModel.setColorFormatSeries(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Веб-новелла (Web)",
+            hexValue = colorFormatWebHex,
+            onValueChange = { viewModel.setColorFormatWeb(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Сингл (Одиночная книга)",
+            hexValue = colorFormatSingleHex,
+            onValueChange = { viewModel.setColorFormatSingle(it) }
+        )
+    }
+}
+
+@Composable
+fun StatusesColorGroup(viewModel: ReadTrackerViewModel) {
+    val colorStatusPlannedHex by viewModel.colorStatusPlanned.collectAsState()
+    val colorStatusReadingHex by viewModel.colorStatusReading.collectAsState()
+    val colorStatusPausedHex by viewModel.colorStatusPaused.collectAsState()
+    val colorStatusCompletedHex by viewModel.colorStatusCompleted.collectAsState()
+    val colorStatusDroppedHex by viewModel.colorStatusDropped.collectAsState()
+
+    CategoryHeader("Статусы чтения")
+    CardGroup {
+        ColorConfigRow(
+            label = "В планах",
+            hexValue = colorStatusPlannedHex,
+            onValueChange = { viewModel.setColorStatusPlanned(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Читаю",
+            hexValue = colorStatusReadingHex,
+            onValueChange = { viewModel.setColorStatusReading(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "На паузе",
+            hexValue = colorStatusPausedHex,
+            onValueChange = { viewModel.setColorStatusPaused(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Завершено",
+            hexValue = colorStatusCompletedHex,
+            onValueChange = { viewModel.setColorStatusCompleted(it) }
+        )
+        HorizontalDivider(color = Color.Gray.copy(alpha = 0.08f), modifier = Modifier.padding(horizontal = 16.dp))
+        ColorConfigRow(
+            label = "Брошено",
+            hexValue = colorStatusDroppedHex,
+            onValueChange = { viewModel.setColorStatusDropped(it) }
         )
     }
 }

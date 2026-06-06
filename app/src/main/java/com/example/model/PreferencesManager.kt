@@ -66,6 +66,9 @@ class PreferencesManager(context: Context) {
     private val _titleFontSize = MutableStateFlow(prefs.getFloat("titleFontSize", 14.0f))
     val titleFontSize: StateFlow<Float> = _titleFontSize
 
+    private val _filterSpacing = MutableStateFlow(prefs.getFloat("filterSpacing", 0.0f))
+    val filterSpacing: StateFlow<Float> = _filterSpacing
+
     // Custom colors flows
     private val _colorAccent = MutableStateFlow(prefs.getString("colorAccent", "#FF9F0A") ?: "#FF9F0A")
     val colorAccent: StateFlow<String> = _colorAccent
@@ -193,6 +196,11 @@ class PreferencesManager(context: Context) {
     fun setTitleFontSize(value: Float) {
         prefs.edit().putFloat("titleFontSize", value).apply()
         _titleFontSize.value = value
+    }
+
+    fun setFilterSpacing(value: Float) {
+        prefs.edit().putFloat("filterSpacing", value).apply()
+        _filterSpacing.value = value
     }
 
     fun setColorAccent(value: String) {
